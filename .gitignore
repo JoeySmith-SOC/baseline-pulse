@@ -1,0 +1,16 @@
+# Build and tooling
+build/
+.dart_tool/
+.idea/
+.vscode/
+*.log
+
+# Platform local config
+android/local.properties
+ios/Pods/
+
+# Environment and secrets
+.env*
+firebase_options.dart
+google-services.json
+GoogleService-Info.plist
