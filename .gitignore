@@ -1,16 +1,35 @@
-# Build and tooling
-build/
+# Flutter / Dart
 .dart_tool/
+.packages
+.pub/
+build/
+
+# IDE
 .idea/
 .vscode/
+*.iml
+
+# Logs
 *.log
 
-# Platform local config
+# Android local
 android/local.properties
-ios/Pods/
+android/.gradle/
 
-# Environment and secrets
-.env*
-firebase_options.dart
-google-services.json
-GoogleService-Info.plist
+# iOS local
+ios/Pods/
+ios/Runner.xcworkspace/
+
+# Secrets and environment
+.env
+.env.*
+!.env.example
+android/key.properties
+key.properties
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+*.jks
+*.keystore
+
+# Generated Firebase config (if generated per-developer)
+lib/firebase_options.dart

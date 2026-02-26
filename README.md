@@ -1,39 +1,63 @@
-# Baseline Pulse
+# BASELINE PULSE
 
-Baseline Pulse is a tactical hybrid performance platform focused on run + ruck execution, with ruck treated as a wedge discipline.
+Production-grade tactical run + ruck tracker with offline-first storage, maps, and Firebase sync scaffolding.
 
-The app is scaffolded for a clean feature-based architecture, an intelligence layer, offline-first local storage, and future cloud sync.
+## Stack
+- Flutter (stable)
+- Hive local persistence
+- Firebase Core/Auth/Firestore
+- Geolocator + Google Maps
+- Health Connect scaffold via `health`
+- RevenueCat scaffold via `purchases_flutter`
 
-## Architecture Map
+## Setup
+1. Install Flutter stable and Android SDK.
+2. Create Firebase project and Android app package `com.baselinepulse.baseline_pulse`.
+3. Place `android/app/google-services.json` locally (do not commit).
+4. Generate Firebase options:
+   - `dart pub global activate flutterfire_cli`
+   - `flutterfire configure --project=YOUR_PROJECT_ID --platforms=android,ios`
+5. Configure Maps key in `android/local.properties`:
+   - `MAPS_API_KEY=YOUR_MAPS_KEY`
+6. (Optional) RevenueCat: wire `Purchases.configure` inside `subscription_service.dart`.
+7. Install deps and run:
+   - `flutter pub get`
+   - `flutter run -d emulator-5554`
 
-- `lib/src/bootstrap`: crash-safe startup and app initialization
-- `lib/src/app`: app shell, router, global theming
-- `lib/src/core`: shared primitives (errors, logging, models, utils)
-- `lib/src/features/*`: feature slices (`data`, `domain`, `presentation`)
-- `lib/src/services`: integration services (reserved)
+## Security Notes
+- No API keys are committed in source.
+- `google-services.json`, `local.properties`, and keystore files are gitignored.
+- Logging is suppressed in release paths.
+- Firebase bootstrap fails gracefully and app still works in local/offline mode.
 
-Initial modules:
-- `home`
-- `run`
-- `ruck`
-- `sessions`
-- `auth`
+## Firebase Security Rules
+Use `firestore.rules` included in repo:
+- `users/{uid}/runs/{sessionId}` restricted to `request.auth.uid == uid`
+- `users/{uid}/rucks/{sessionId}` restricted to `request.auth.uid == uid`
+- deny all else
 
-Roadmap-ready placeholders:
-- offline-first persistence via Hive
-- Firebase sync integration (no keys/config committed)
-- RevenueCat integration later
+## Architecture
+Feature-based structure with service-driven business logic.
+- UI in `features/*/screens` and `features/*/widgets`
+- Business logic in `features/*/services`
+- Models in `features/*/models`
+- Bootstrap and app shell in `app/` + `core/bootstrap`
 
-## Run
+## Acceptance Checklist
+- [ ] App launches to Home with Run/Ruck/Workouts/Recovery tiles.
+- [ ] Run flow works: setup -> active -> summary -> history.
+- [ ] Ruck flow works: setup (weight required) -> active -> summary -> history.
+- [ ] Locale unit default works (US=mi, else km), manual override works.
+- [ ] GPS route polyline renders on map when permission granted.
+- [ ] Time mode can run without GPS.
+- [ ] Distance/Open modes warn before no-GPS start.
+- [ ] Splits auto-record every 1 mi/km.
+- [ ] Sessions persist in Hive and list newest-first in history screens.
+- [ ] Firebase anonymous auth initializes when configured.
+- [ ] Sync queue enqueues on finish and retries via flush.
+- [ ] Recovery screen shows Health Connect status scaffold.
+- [ ] Premium-gated action opens paywall for free tier.
 
-```bash
-flutter pub get
-flutter run
-```
-
-## Test
-
-```bash
-flutter analyze
-flutter test
-```
+## firebase_options.dart policy
+This repository currently keeps a placeholder `lib/firebase_options.dart` for compile safety.
+If your team prefers generated-only per developer, keep it gitignored and regenerate locally with `flutterfire configure`.

@@ -1,0 +1,4 @@
+<resources>
+    <!-- Keep placeholder only. Real key injected using Gradle property GOOGLE_MAPS_API_KEY. -->
+    <string name="google_maps_api_key">REPLACE_WITH_GOOGLE_MAPS_API_KEY</string>
+</resources>
